@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AlliedTestingTask.Data.Models;
 using AlliedTestingTask.Data.Models.Requests;
 using AlliedTestingTask.Data.Models.Responses;
+using AlliedTestingTask.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,8 +16,28 @@ namespace AlliedTestingTask.Controllers
     [Route("api/v1/registrations")]
     public class RegistrationsController : ControllerBase
     {
-        public RegistrationsController()
+        private OrganisationService _organisationService;
+        private RegistrationService _registrationService;
+        private IMapper _mapper;
+
+        public RegistrationsController
+        (
+            OrganisationService organisationService,
+            RegistrationService registrationService,
+            IMapper mapper
+        )
         {
+            _organisationService = organisationService;
+            _registrationService = registrationService;
+            _mapper = mapper;
+        }
+
+        [HttpGet]
+        public ActionResult<List<GetRegistrationResponse>> GetAll()
+        {
+            return _registrationService.GetAll()
+                .Select(r => _mapper.Map<GetRegistrationResponse>(r)).ToList();
+            
         }
 
         [HttpGet("{registrationId}")]
