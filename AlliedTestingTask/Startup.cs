@@ -33,8 +33,7 @@ namespace AlliedTestingTask
             {
                 c.EnableAnnotations();
             });
-            services.AddTransient<OrganisationService>();
-            services.AddTransient<RegistrationService>();
+            services.AddSingleton<RegistrationService>();
             services.AddAutoMapper(typeof(Startup));
         }
         

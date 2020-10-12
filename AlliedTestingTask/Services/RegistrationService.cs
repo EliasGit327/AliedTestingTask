@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AlliedTestingTask.Data.Models;
 
 namespace AlliedTestingTask.Services
@@ -16,6 +17,18 @@ namespace AlliedTestingTask.Services
         public List<Registration> GetAll()
         {
             return _registrations;
+        }
+
+        public Registration GetById(string id)
+        {
+            return _registrations.FirstOrDefault(r => r.Id == new Guid(id));
+        }
+
+        public Guid Add(Registration registration)
+        {
+            registration.Id = Guid.NewGuid();
+            _registrations.Add(registration);
+            return registration.Id;
         }
 
         private void GenerateRegistration()

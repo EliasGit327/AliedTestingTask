@@ -16,47 +16,45 @@ namespace AlliedTestingTask.Controllers
     [Route("api/v1/registrations")]
     public class RegistrationsController : ControllerBase
     {
-        private OrganisationService _organisationService;
         private RegistrationService _registrationService;
         private IMapper _mapper;
 
         public RegistrationsController
         (
-            OrganisationService organisationService,
             RegistrationService registrationService,
             IMapper mapper
         )
         {
-            _organisationService = organisationService;
             _registrationService = registrationService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<List<GetRegistrationResponse>> GetAll()
+        public ActionResult<List<Registration>> GetAll()
         {
-            return _registrationService.GetAll()
+            var result = _registrationService.GetAll()
                 .Select(r => _mapper.Map<GetRegistrationResponse>(r)).ToList();
             
+            return result.Count > 0 ? Ok(result) : BadRequest() as ActionResult;
         }
 
         [HttpGet("{registrationId}")]
         public ActionResult<GetRegistrationResponse> Get
-            ([FromHeader] string? xCorrelationid, string registrationId = "x-569839dd-9668-4872-b829-1d6c1787c6c6")
+            ([FromHeader] string? xCorrelationid, string registrationId = "569839dd-9668-4872-b829-1d6c1787c6c6")
         {
-            return Ok(new GetRegistrationResponse());
+            var result = _registrationService.GetById(registrationId);
+            
+            return result != null ? Ok(result) : BadRequest() as ActionResult;
         }
 
         [HttpPost]
         public ActionResult<RegistrationResponse> Post([FromBody] RegistrationRequest registrationRequest)
         {
-            return Ok
-            (
-                new RegistrationResponse()
-                {
-                    RegistrationId = "42"
-                }
-            );
+            var result = _registrationService.Add(_mapper.Map<Registration>(registrationRequest));
+
+            return result != null ?
+                Ok(new RegistrationResponse() { RegistrationId = result.ToString()}) : 
+                BadRequest() as ActionResult;
         }
     }
 }
