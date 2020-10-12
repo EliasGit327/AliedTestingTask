@@ -12,7 +12,9 @@ namespace AlliedTestingTask.Data.Models.Requests
         public DateTime RegistrationDate { get; set; }
         [DefaultValue("en")]
         public string Locale { get; set; }
+        [Required]
         public Person Person { get; set; }
+        [Required]
         public Organisation Organisation { get; set; }
     }
 }
