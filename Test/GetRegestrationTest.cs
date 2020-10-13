@@ -1,9 +1,11 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using AlliedTestingTask;
 using AlliedTestingTask.Data.Models.Requests;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using Xunit;
@@ -27,10 +29,7 @@ namespace Test
         public async Task GetRegistrationTest()
         {
             var response = await _client.GetAsync("https://localhost:5001/api/v1/registrations");
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new InvalidOperationException("Bad request!");
-            }
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }
